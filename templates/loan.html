@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Loan
+{% endblock %}
+
+{% block main %}
+<form action="/loan" method="post">
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="loan" placeholder="Amount"
+            type="number">
+    </div>
+    <button class="btn btn-primary" type="submit">Request Loan</button>
+</form>
+{% endblock %}
+
+

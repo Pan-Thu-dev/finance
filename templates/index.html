@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block main %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="text-start">Symbol</th>
+            <th class="text-end">Shares</th>
+            <th class="text-end">Price</th>
+            <th class="text-end"></th>
+            <th class="text-end"></th>
+            <th class="text-end"></th>
+            <th class="text-end">TOTAL</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for share in portfolio %}
+        <tr>
+            <td class="text-start">{{ share["symbol"] }}</td>
+            <td class="text-end">{{ share["share_count"] }}</td>
+            <td class="text-end">{{ share["price"] }}</td>
+            <td class="text-end">
+                <input id="shares-input-{{ share['symbol'] }}" class="form-control mx-auto w-auto" name="shares"
+                    placeholder="Shares" type="number" min="1" required>
+            </td>
+
+            <td class="text-end">
+                <form action="/buy" method="post" onsubmit="return setSharesValue('{{ share['symbol'] }}', this)">
+                    <input type="hidden" name="symbol" value="{{ share['symbol'] }}">
+                    <input type="hidden" name="shares" id="buy-shares-{{ share['symbol'] }}">
+                    <button class="btn btn-primary" type="submit">Buy</button>
+                </form>
+            </td>
+
+            <td class="text-end">
+                <form action="/sell" method="post" onsubmit="return setSharesValue('{{ share['symbol'] }}', this)">
+                    <input type="hidden" name="symbol" value="{{ share['symbol'] }}">
+                    <input type="hidden" name="shares" id="sell-shares-{{ share['symbol'] }}">
+                    <button class="btn btn-primary" type="submit">Sell</button>
+                </form>
+            </td>
+            <td class="text-end">{{ share["total"] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="border-0 fw-bold text-end" colspan="6">Cash</td>
+            <td class="border-0 text-end">{{ cash }}</td>
+        </tr>
+        <tr>
+            <td class="border-0 fw-bold text-end" colspan="6">TOTAL</td>
+            <td class="border-0 fw-bold text-end">{{ total }}</td>
+        </tr>
+    </tfoot>
+</table>
+
+<script>
+    function setSharesValue(symbol, form) {
+        // Get the value from the shared input field
+        const sharesInput = document.getElementById(`shares-input-${symbol}`);
+        const sharesValue = sharesInput.value;
+
+        // Set this value to the hidden input in the form being submitted
+        form.querySelector('input[name="shares"]').value = sharesValue;
+
+        // Allow form submission
+        return true;
+    }
+</script>
+{% endblock %}
